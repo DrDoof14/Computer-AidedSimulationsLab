@@ -1,1 +1,5 @@
+01 Queueing SystemAssignment
 
+Write a piece of code that represents a single server FIFO queue.
+
+Please use  list structures to represent both the queue and the FES.
