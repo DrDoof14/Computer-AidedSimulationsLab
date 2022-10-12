@@ -1,2 +1,4 @@
+02 - Warmup for peergrading
+Write 5 lines of python code that is nice to read or to understand
 
-just had to write five readable lines of Python code
+
