@@ -11,10 +11,6 @@ import seaborn as sns
 
 
 
-#Input parameters
-bins = [100, 200, 400, 600, 800, 1000] # number of bins 
-trials = 20 #the number of times the simulations happens 
-seed = 1886
 
 def random_dropping (n, trials,d):
     #d = 0 -> random
@@ -66,6 +62,12 @@ def random_dropping (n, trials,d):
 
 
 #we perform all the simulations since we need to compare them in a plot
+
+
+#Input parameters
+bins = [100, 200, 400, 600, 800, 1000] # number of bins 
+trials = 20 #the number of times the simulations happens 
+seed = 1886
 
 
 #Simulations for Random Dropping
