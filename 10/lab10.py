@@ -159,5 +159,75 @@ elif user == "2" or user =="3":
         plt.legend()
         plt.show()
 if user == '5':
-    pass 
+
+
+    def uniform():
+        days=np.zeros(1000) # we make a list of zeros with lenght of 366 which is the number of days 
+        collision=0#number of collisions 
+        flag = True
+        counter=0#we need the number of people that enter the class until a conflict happens
+        
+        
+        while flag == True:
+            random_day=random.randint(0,999)
+            if days[random_day]==0:
+                days[random_day]=1
+                counter=counter+1 #counts the number of students 
+            else:
+                flag = False
+                
+                
+        return counter#number of students that came in the class before a conflict
+                
+    ########################################################################################
+
+    #defree of freedom = n-1 in here it's 1999
+    seed=1886
+    np.random.seed(seed)
+    random.seed(seed) 
+    uniform_conflict=[]
+    for i in range(0,1000):
+        uniform_conflict.append(uniform())
+    #we have the average uniform conflicts on the left and the average real-life conflicts on the right
+    sum_of_conflicts={'Uniform Distro':sum(uniform_conflict)/len(uniform_conflict)}
+
+
+    list_of_students=[i for i in range(0,100)] #based on our distro, we better not use anything more than 100
+    uniform_prob={}
+    real_life_prob={}
+    for f in list_of_students:
+        class_uniform=[0]*20
+        class_real_life=[0]*20    #we create classes both for the real-life scenario and also the uniform scenario
+
+        for d in range(len(class_real_life)):
+            uniform_bday=[random.randint(0,365) for _ in range(0,f)]
+            # checking if there is a conflict in one specific class and make it 1
+            if len(uniform_bday) != len(set(uniform_bday)):
+                class_uniform[d] = 1
+    #probablities
+        uniform_prob.update({f:(sum(class_uniform)/len(class_uniform))})
+        
+    #code to plot the theoretical distro
+    numerator = 1000
+    denominator = 1000
+    #create empty list to store dictionary
+    probabilities = []
+    #for loop to generate probabilities
+    for i in range(2, 100):
+        numerator = numerator * (1000 + 1 - i)
+        denominator = denominator * 1000
+        probabilities.append({'group_size':i, 'probability':round(1 - (numerator / denominator), 3)})
+        #print(round(probabilities, 3))
+    #load dataframe
+    df = pd.DataFrame(probabilities)
+
+
+    print('performing the same experiment for m = 1000 on the uniform distribution and comparing it to the theoretical output')
+    plt.plot(uniform_prob.keys(), uniform_prob.values(), label='uniform')
+    plt.plot(df['group_size'],df['probability'],label='theoretical')
+    plt.xlabel('m')
+    plt.ylabel('Prob')
+    plt.legend()
+    plt.show()
+    
 
