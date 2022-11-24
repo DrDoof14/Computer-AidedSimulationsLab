@@ -7,7 +7,6 @@ import math
 import dataframe_image as dfi 
 
 
-# # Defining functions and classes
 
 pars1= input("to see all the distributions in a plot enter 1 and if you want to see them separately enter 2: \n It will take a while for the code to run, so please be patient. \n")
 pars2= input("Enter Y/N if you want to see the numerical info of the simulation in a PNG file: \n")
@@ -69,8 +68,7 @@ class Client:
         
 
 
-# # Finding transient knee (k)
-# In order to find the transient knee (k), we should implement the simulation for a long time and compute the average. Afterwards, we should calculate the average depending on k to plot. Fianlly, k is determined by this plot.
+ # Finding the transient point (k)
 
 
 
@@ -148,7 +146,7 @@ def hyper_expo():
     return service
 
 
-#The value for P should be set by user
+#The value for P should be set by user and we put 0.5
 
 
 
@@ -185,7 +183,7 @@ for u in utilization:
         #we also use variance in order to find the transient point
         
         batch_mean_list = []
-        expanding_number = 0 # is the time we add to  the simulation warmup time
+        expanding_number = 0 # it is the size of the batch that will be added each time after expanding (when the condition is not met and we have to keep on working)
         batche_initial_size = 10
         batch_count = 10 #it surely shouldn't be lower than 10
         flag =1 #it is used to end the simulation
@@ -220,30 +218,30 @@ for u in utilization:
                 cumulative_delay.append(sum(delay)/len(delay))
                 # the delay happens in departure and taht's why it's been added here
             
-            if time > int((simulation_time_warm_up * (1 + u) + expanding_number)):
+            if time > int((simulation_time_warm_up * (1 + u) + expanding_number)): # if there's still time to go/ data to deal with/ haven't reached the end of the data we have
                 # we add the simulation time by 1+u so that u affects the added simulation time and as a consequence 
                 # it affects the number and also the size of batches
                 
-                if expanding_number == 0: 
+                if expanding_number == 0: #we haven't added batches yet and we haven't decided the size of the newly added batches yet 
                     k = transient_point(cumulative_delay, u)
                     batch_size = int(((simulation_time_warm_up * (1 + u) - k)/batche_initial_size))
-                    batch_start_index = k
+                    batch_start_index = k #the first index after finding the transient is the first index of the batches 
                 else:
                     batch_start_index = len(cumulative_delay) - batch_size
                 
                 
-                while(batch_start_index < len(cumulative_delay)):
-                    batch_mean_list.append(np.mean(cumulative_delay[batch_start_index:(batch_start_index + batch_size)]))
-                    batch_start_index += batch_size
+                while(batch_start_index < len(cumulative_delay)): 
+                    batch_mean_list.append(np.mean(cumulative_delay[batch_start_index:(batch_start_index + batch_size)])) # we compute the mean of the batches
+                    batch_start_index += batch_size # we add the end of the last batch as the initial point of the next batch
                 
             
                 mu, margin, expanding_condition  = confidence_interval_margin(batch_mean_list, confidence_interval)
                 
-                if expanding_condition > accuracy: # the scenario in which we add batches to the simulation
+                if expanding_condition > accuracy: # the scenario in which we add batches to the simulation and keep on simulating 
                     expanding_number += batch_size
-                    batch_count += 1
+                    batch_count += 1 # number of batches added
                 else:
-                    flag = 0
+                    flag = 0 # used to exit the simulation
                     
             target += 1
         # at the end we store all the outputs of the simulation on different distributions and different utilization values
