@@ -9,9 +9,8 @@ import dataframe_image as dfi
 
 # # Defining functions and classes
 
-pars1= input("to see all the distributions in a plot enter 1 and if you want to see them separately enter 2: \n ")
+pars1= input("to see all the distributions in a plot enter 1 and if you want to see them separately enter 2: \n It will take a while for the code to run, so please be patient. \n")
 pars2= input("Enter Y/N if you want to see the numerical info of the simulation in a PNG file: \n")
-print("It will take a while for the code to run, so please be patient. \n")
 
 def arrival(time, FES, queue, average_arrival_time, average_service_time):
     
@@ -80,7 +79,7 @@ def transient_point(cumulative_delay, u): #u is the utilization
     ave = np.mean(cumulative_delay)
     std = np.std(cumulative_delay)
     
-    if u <= 0.6: #  we choose a value such as 0.6 or maybe 0.7 in order to avoid the transi
+    if u <= 0.6: #  we choose a value such as 0.6 or maybe 0.7 in order to avoid the transient being negative
         j = int(len(cumulative_delay) * u)
     else:
         j = int(len(cumulative_delay) * 0.6) #when we have higher u, we have problems with indexed
@@ -124,10 +123,10 @@ def hyper_expo():
     w1 = 1/6 # we define two different winning probabilities
     w2 = 1/8 
     u = random.random() #we can aslo use np.random
-    """"
-it's like tossing a coin, we define a threshold and if the random number is lower than that player 1 wins 
-if not,player 2 wins
-    """"
+    """
+    it's like tossing a coin, we define a threshold and if the random number is lower than that player 1 wins 
+    if not,player 2 wins
+    """
     if u <= p: 
         expec = w1
     else:
@@ -225,7 +224,7 @@ for u in utilization:
                 # we add the simulation time by 1+u so that u affects the added simulation time and as a consequence 
                 # it affects the number and also the size of batches
                 
-                if expanding_number == 0: # the scenario that we haven't had added any batches yet
+                if expanding_number == 0: 
                     k = transient_point(cumulative_delay, u)
                     batch_size = int(((simulation_time_warm_up * (1 + u) - k)/batche_initial_size))
                     batch_start_index = k
@@ -239,9 +238,8 @@ for u in utilization:
                 
             
                 mu, margin, expanding_condition  = confidence_interval_margin(batch_mean_list, confidence_interval)
-                print(f'margin is:*******************************{margin}**********************')
                 
-                if expanding_condition > accuracy:
+                if expanding_condition > accuracy: # the scenario in which we add batches to the simulation
                     expanding_number += batch_size
                     batch_count += 1
                 else:
@@ -258,9 +256,6 @@ for u in utilization:
 
 df = pd.DataFrame.from_dict(dict_simulation)
 # df
-
-
-# In[15]:
 
 
 # to store the information describing the data frame 
@@ -313,7 +308,8 @@ if pars1 == "1":
     ax.set_xlabel(xlabel="Utilisation")
     ax.set_ylabel(ylabel="Delay")
     ax.set_title("Delays and Utilisations")
-    fig.show()
+    plt.savefig('final')
+    plt.show()
 
 
 #  separately showing different plots for different distributions with confidence intervals
@@ -344,8 +340,9 @@ if pars1 == "2":
     ax.set_xlabel(xlabel="Utilisation")
     ax.set_ylabel(ylabel="Delay")
     ax.set_title("Delays and Utilisations for the Deterministic distribution")
-    fig.show()
-
+    plt.savefig('Deterministic')
+    plt.show()
+    
 
 # Exponential
 
@@ -375,7 +372,8 @@ if pars1 == "2":
     ax.set_xlabel(xlabel="Utilisation")
     ax.set_ylabel(ylabel="Delay")
     ax.set_title("Delays and Utilisations for the Exponential distribution")
-    fig.show()
+    plt.savefig('Exponential')
+    plt.show()
 
 
 # hyper-exponential
@@ -408,7 +406,8 @@ if pars1 == "2":
     ax.set_xlabel(xlabel="Utilisation")
     ax.set_ylabel(ylabel="Delay")
     ax.set_title("Delays and Utilisations for the Hyper-exponential distribution")
-    fig.show()
+    plt.savefig('hyper-exponential')
+    plt.show()
 
 
 
