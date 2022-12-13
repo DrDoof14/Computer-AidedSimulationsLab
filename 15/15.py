@@ -34,8 +34,11 @@ print(f'number of distinct words is equal to {len(set(clean_words))} \n')
 ######################################
 
 # here we perform a sliding window like method to create the verses with the size of 4 or 8 
-plagiarism_size= 4 #window size 
-#plagiarism_size= 8 #window size 
+size_win= input('what is your desired length for verses? 8 or 4?')
+if size_win=="4":
+    plagiarism_size= 4 #window size
+elif size_win=='8':
+    plagiarism_size= 8 #window size 
 
 verses = []
 finger_prints=[]
@@ -45,7 +48,7 @@ verse_count=0
 
 #here we create the verses 
 for i in range (len(clean_words)):
-    if len(clean_words[i:i+plagiarism_size])==4:
+    if len(clean_words[i:i+plagiarism_size])==plagiarism_size:
         verses.append(' '.join(clean_words[i:i+plagiarism_size]))
 
 # these few lines are based on the formulas provided in the slides     
@@ -79,7 +82,7 @@ print(f'len of verses before set {len(verses)} and after set {len(verses_set)} \
 print(f'len of finger prints befor set {len(finger_prints)} and after set {len(finger_prints_set)}')
 ####################################################################################################
 print(f'size of fingerprints is equal to {asizeof.asizeof(finger_prints_set)} bytes \n')
-print(f'size of verses is equal to {asizeof.asizeof(verses)} bytes  \n')
+print(f'size of verses is equal to {asizeof.asizeof(verses_set)} bytes  \n')
 ####################################################################################################
 #it's better to have both fingerprints and the verses stored in a dictionary 
 # so we're gonna do it from the beginning
@@ -92,7 +95,7 @@ new_verses=[]
 general_dict={}
 
 for i in range (len(clean_words)):
-    if len(clean_words[i:i+plagiarism_size])==4:
+    if len(clean_words[i:i+plagiarism_size])==plagiarism_size:
         new_verses.append(' '.join(clean_words[i:i+plagiarism_size]))
         temp=new_verses[i]
         encoded=temp.encode('utf-8')
