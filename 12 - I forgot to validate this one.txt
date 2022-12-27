@@ -1,0 +1,42 @@
+it was a stupd code that we had to run on our terminals 
+I forgot to validate this one 
+Other students 
+First run:
+
+!python3.9 -m timeit -s "table ={ 3:1,3+8:2,3+16:3,3+24:4,3+32:5}" "table[3]"
+
+20000000 loops, best of 5:18.4 nsec per loop
+
+
+
+Second run:
+
+!python3.9 -m timeit -s "table ={ 3:1,3+8:2,3+16:3,3+24:4,3+32:5}" "table[3+32]"
+
+10000000 loops, best of 5:22.9 nsec per loop
+
+
+
+Explanation: 
+
+As it can be seen from the results, the second lookup is more expensive in terms of time and finishes over several slots in opposite of the first one which is done at the first slot. 
+
+The reason is that since the keys of dictionary are all integer values and hash as themselves, we can create unlimited collisions. 
+
+In a sense that, the index for all of these keys is 011 so the  first key_value pair sits in this cell but after that we have collision for all other entries, 
+
+therefore, it is needed to go through all other possible cells to insert these values. 
+
+
+---------------------------
+The output is the following when I run the code:
+
+20000000 loops, best of 5: 19.3 nsec per loop
+10000000 loops, best of 5: 23.2 nsec per loop 
+
+This operation constructs a hashtable, and the first one runs 20000000 times to display the best of 5 in 19.3 seconds, 
+
+and the second one runs 10000000 times to display the best of 5 in 23.2 seconds. This is reasonable because in this command, 
+
+hash tables are used to store data in dictionaries and search for a specific value in the table and may need a different duration to search up than another. 
+
