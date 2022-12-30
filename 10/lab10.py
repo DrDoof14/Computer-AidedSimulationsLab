@@ -85,7 +85,7 @@ def real_life():
 
 
 if user == "1" or user =="4":
-    #defree of freedom = n-1 in here it's 1999
+    #degree of freedom = n-1 in here it's 1999
     seed=1886
     np.random.seed(seed)
     random.seed(seed) 
