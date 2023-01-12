@@ -268,7 +268,7 @@ plt.show()
 # Buth the simulation and the theory are close to each other
 
 #======================================4th question============================================
-in8=input('The answer to the 4th question of the bit sting array part is available in the report in details\n')
+in8=input('The answer to the 4th question of the bit string array part is available in the report in details\n')
 
 #===========================================The end of the bit string array part of the questions===========================
 
@@ -282,13 +282,13 @@ in8=input('The answer to the 4th question of the bit sting array part is availab
 #first we find the optimal values for k (number of hashes)
 # The values we get out of the formula are real numbers but we want integers
 # We have to plot the performance graph in order to find out the right values for the number of hashes (K)
-in9=input('Press enter to see the answer to the first question of the bloom filters part\n')
+in9=input('Press enter to see the answer to the first question of the bloom filters part (It will take a while to make the performance graph)\n')
 num_b =[j for j in range(19,24)]
 m=len(verses_set)
 n_num=[2**i for i in num_b]
 hash_num_opt_theory=[(i/m)*math.log(2) for i in n_num]
 plt.figure(figsize=(10,10))
-plt.plot(n_num,hash_num)
+plt.plot(n_num,hash_num_opt_theory)
 plt.xlabel('Memory')
 plt.ylabel('Number of Hashes')
 plt.grid()
@@ -356,7 +356,7 @@ We do the same for the rest of the values
 
 '''
 kopt={2**19:4,2**20:8,2**21:15,2**22:30,2**23:60}
-
+print(f'The optimal values for k are : {kopt}\n')
 #==========================second question==========================================
 # the formula in page 29 of slide 12 is used 
 # (1 - e ** -k*m/n) ** k
@@ -379,7 +379,7 @@ The first question is also a theory based question and we just used the value fo
 '''
 
 #===========================third question============================
-in11=input('The answer to the 4th question of the bloom filter part is available in the report in details\n')
+in11=input('The answer to the 3rd question of the bloom filter part is available in the report in details\n')
 #=======================4th question==================================
 in12=input('Press enter to see the answer to the 4th question of the bloom filters part\n')
 
