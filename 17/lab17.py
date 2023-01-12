@@ -345,14 +345,15 @@ plt.show()
 # and also the theoratical values for k that we have computed, the we can find the right values for k
 # here we can see the obtained values for the optimal number of hashes from the formula
 print (f'The theoratical values for the optimal number of hashes for each value for the memory (n) {hash_num_opt_theory}\n')
-print('The right values for K has been chosen based on the performance graph also the dictionary that contains the values for epsilon \n')
+print('The right values for K has been chosen based on the performance graph and also the dictionary that contains the values for epsilon \n')
 print('You can see the keys and values of the dictionary if you uncomment the line 350 in the code (the line below this print statement)\n')
 # print(bloom_filter_dict)
 ''' 
 
 This is how the right values have been chosen,
-For example if you check the dictionary, you can see that for 2 ** 19, k = 4 has a lower value for false postive that 3, so for n=2 ** 19 the right value for k is 4
+If you check the dictionary "bloom_filter_dict", you can see that for example for 2 ** 19, k = 4 has a lower value for false postive that 3, so for n=2 ** 19 the right value for k is 4
 We do the same for the rest of the values
+so the values were checked and the added to a dictionary (kopt) manually
 
 '''
 kopt={2**19:4,2**20:8,2**21:15,2**22:30,2**23:60}
@@ -426,7 +427,7 @@ plt.xlabel('Memory (kb)')
 plt.ylabel('False Postive')
 plt.grid()
 plt.legend()
-plt.savefig('bloom_filters_question_four')
+# plt.savefig('bloom_filters_question_four')
 plt.show()
 
 
@@ -442,13 +443,12 @@ plt.xlabel('Memory (kb)')
 plt.ylabel('False Postive')
 plt.grid()
 plt.legend()
-plt.savefig('bloom_filters_question_five')
+# plt.savefig('bloom_filters_question_five')
 plt.show()
 
 #As you can see in the plot, the values for epsilon gathered from simulation and theory are the same so the plots are the same 
 # they overlap eachother
-
-
+print('The plots overlap as you can see \n')
 #=============The optional part====================
 in14=input('Press enter to see the answer to the optional part\n')
 
