@@ -67,7 +67,9 @@ print(f'\nTotal number of verses(set) is {len(verses_set)} \n')
 print(f'\nTotal number of fingerprints is {len(finger_prints)} \n')
 print(f'\nTotal number of fingerprints(set) is {len(finger_prints_set)} \n')
 print (f'The number of collisions is equal to {len(finger_prints)-len(finger_prints_set)} \n')
-
+in0=input('press enter to see the size of the set of words\n')
+#====================Set of sentences=======================================================
+print(f'The size of the set of senteces is equal to {asizeof.asizeof(verses_set)} bytes\n') # 
 
 #=========================================================
 
@@ -95,7 +97,7 @@ for i in range (len(clean_words)):
         else:
             temp_dict={h:temp}
             general_dict.update(temp_dict)
-#=====================================The end of the Pre-processing phase=================================================
+#=====================================The end of the Pre-processing phase and also set of sentences=================================================
 
 
 
