@@ -26,7 +26,7 @@ for line in words.copy():
         clean_words.extend(splited_words)
 print('the total number of words is equal to\n')
 print(len(clean_words)) #counting the number of words 
-print(f'The size of distinct is equal to {asizeof.asizeof(clean_words)} bytes \n')
+print(f'The size of distinct words is equal to {asizeof.asizeof(clean_words)} bytes \n')
 print(f'number of distinct words is equal to {len(set(clean_words))} \n')
 #=====================================================
 #creating the verses 
@@ -67,12 +67,12 @@ print(f'\nTotal number of verses(set) is {len(verses_set)} \n')
 print(f'\nTotal number of fingerprints is {len(finger_prints)} \n')
 print(f'\nTotal number of fingerprints(set) is {len(finger_prints_set)} \n')
 print (f'The number of collisions is equal to {len(finger_prints)-len(finger_prints_set)} \n')
-in0=input('Press enter to see the size of the set of words\n')
+in0=input('Press enter to see the size of the set of sentences\n')
 #====================Set of sentences=======================================================
-print(f'The size of the set of senteces is equal to {asizeof.asizeof(verses_set)} bytes\n') # 
+print(f'The size of the set of senteces is equal to {asizeof.asizeof(verses_set)/1024} KB\n') # 
 prob_false_positive_set_of_senteces=(m/n)
 # epsilon = m/n = m/ 2**b
-in444=input('do you want to see the probability of false positive for the set of sentences? Y/N ')
+in444=input('do you want to see the probability of false positive for the set of sentences? Y/N \n')
 if in444=='y'or in444=='Y' or in444=="yes" or in444=='Yes':
     print(prob_false_positive_set_of_senteces)
 #=========================================================
@@ -108,7 +108,6 @@ for i in range (len(clean_words)):
 #=====================================Fingerprint set=====================================================================
 in2=input('Press enter to see the answer to the first question of the fingerprints set\n')
 # for the fingerprints part we have to chagne the epsilon between 10 ** -5 and 10 ** -6 to find the minimum number of bits  
-r=np.linspace(0.0001,0.000001,1000).tolist()
 #=========first question=========================
 
 # in this section we try to find the right value for b and the right value for epsilon 
@@ -151,7 +150,7 @@ in3=input('Press enter to see the answer to the second question of the fingerpri
 
 temp =(m/1.17) ** 2
 bteo = math.log(temp,2)
-print(f'The theoratical value for b {round(bteo)}\n')
+print(f'The theoratical value for b is equal to {round(bteo)}\n')
 #we need to round it up since we need more bits in order to store stuff
 # we can't use fewer bits in order to store them
 
@@ -380,6 +379,7 @@ for n, k in kopt.items():
 
 
 print(f'you can see the theoratical values for the probability of false postive based on the optimal values for k here \n')
+print('The values you see represent (in order) n , k(number of hashes), P(fp)\n ')
 print(f'{theoratical_epsilons} \n')
 #the list below is extracted from the theoratical_epsilons dictionary
 epsilon_values_theory=[0.0744092833872199,0.0055367414541996,3.0253366974359995e-05,9.15266213285296e-10,8.377122411816051e-19]
@@ -391,7 +391,7 @@ The first question is also a theory based question and we just used the value fo
 '''
 
 #===========================third question============================
-in11=input('The answer to the 3rd question of the bloom filter part is available in the report in details\n')
+in11=input('The answer to the 3rd question of the bloom filter part is available in the report in more details\n')
 #=======================4th question==================================
 in12=input('Press enter to see the answer to the 4th question of the bloom filters part\n')
 
@@ -433,11 +433,9 @@ for n,k in kopt.items():
 #P(FB) = (a.count(1)/m)**k
 
 
-# bloom_filter_dict_sim
-#the values in the list below are gathered from the dictionary bloom_filter_dict_sim that is commented above 
-epsilon_values_sim=[0.07441333677135287,0.005522559661331668,2.9930506277165827e-05,9.131377740901003e-10,8.263579823178387e-19]
-
 #plotting 
+
+
 plt.figure(figsize=(10,10))
 plt.plot([i/(1024*8) for i in n_num],epsilon_values_sim, label = "simulation")
 plt.xlabel('Memory (kb)')
@@ -445,6 +443,18 @@ plt.ylabel('False Postive')
 plt.grid()
 plt.legend()
 plt.show()
+
+
+
+
+# bloom_filter_dict_sim
+#the values in the list below are gathered from the dictionary bloom_filter_dict_sim that is commented above 
+epsilon_values_sim=[0.07441333677135287,0.005522559661331668,2.9930506277165827e-05,9.131377740901003e-10,8.263579823178387e-19]
+in555=input('Do you want to see the dictionary containing the values for P(FP) and k and also n that were obtained from the simulation? Y/N \n')
+if in555=='y'or in555=='Y' or in555=="yes" or in555=='Yes':
+    print(f'[n : [k : [p(fp):size in kb]]]\n {bloom_filter_dict_sim}')
+
+
 in222=input('Do you want to see the sizes of different bloom filters?Y/N\n')
 if in222=='y'or in222=='Y' or in222=="yes" or in222=='Yes':
     print(f'[n : [k : [p(fp):size in kb]]]\n {bloom_filter_dict_sim_kb}')
