@@ -393,7 +393,7 @@ The first question is also a theory based question and we just used the value fo
 #===========================third question============================
 in11=input('The answer to the 3rd question of the bloom filter part is available in the report in more details\n')
 #=======================4th question==================================
-in12=input('Press enter to see the answer to the 4th question of the bloom filters part\n')
+in12=input('Press enter to see the answer to the 4th question of the bloom filters part(it might take a little while)\n')
 
 # We have the optimal values for k
 # We have different values for n and as a consequence different values for b
@@ -433,7 +433,6 @@ for n,k in kopt.items():
 #P(FB) = (a.count(1)/m)**k
 
 
-#plotting 
 
 
 
@@ -443,6 +442,8 @@ for n,k in kopt.items():
 # bloom_filter_dict_sim
 #the values in the list below are gathered from the dictionary bloom_filter_dict_sim that is commented above 
 epsilon_values_sim=[0.07441333677135287,0.005522559661331668,2.9930506277165827e-05,9.131377740901003e-10,8.263579823178387e-19]
+
+#plotting 
 
 
 plt.figure(figsize=(10,10))
@@ -456,10 +457,10 @@ plt.show()
 
 
 
-
 in555=input('Do you want to see the dictionary containing the values for P(FP) and k and also n that were obtained from the simulation? Y/N \n')
 if in555=='y'or in555=='Y' or in555=="yes" or in555=='Yes':
-    print(f'[n : [k : [p(fp):size in kb]]]\n {bloom_filter_dict_sim}')
+    print(f'[n : [k : p(fb)]]\n {bloom_filter_dict_sim}')
+    #{n:{k:P(FP)}} what you see in this dictionary
 
 
 in222=input('Do you want to see the sizes of different bloom filters?Y/N\n')
@@ -488,7 +489,7 @@ plt.show()
 # they overlap eachother
 print('The plots overlap as you can see \n')
 #=============The optional part====================
-in14=input('Press enter to see the answer to the optional part\n')
+in14=input('Press enter to see the answer to the optional part(it might take a little while)\n')
 
 # calculate the output of the formula for k from 1 to 10 and different values of n
 # -1 * (n/k)* log(1-(a.count(1)/n),base=math.e)
@@ -524,9 +525,8 @@ for n in n_num:
 
         memory_dict_optional[k] = -1 * (n/k)* math.log(1-(a.count(1)/n),math.e)
     bloom_filter_dict_optional[n]=memory_dict_optional
-#P(FB) = (a.count(1)/m)**k lol
-print(bloom_filter_dict_optional)
 
+print(bloom_filter_dict_optional)
 
 
 #=================The end of the bloom filters part===================================
