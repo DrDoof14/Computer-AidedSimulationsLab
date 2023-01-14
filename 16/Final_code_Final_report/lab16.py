@@ -131,8 +131,7 @@ def hawkes_simulation(decay, T):
             dead_ppl = math.ceil(0.02 * infected_ppl)
             infected_ppl_list.append(infected_ppl-dead_ppl)
             dead_ppl_list.append(dead_ppl)
-            tn=s
-            event_times.append(tn)
+            event_times.append(s)
     if s<T:
         
         dead_ppl=math.ceil(0.02 * infected_ppl)  # to only get the number of dead people
@@ -224,7 +223,7 @@ def hawkes_simulation_generalized(decay,T):
         if s >= initialization_time:
             rho=optimize_rho(cost, T, s, dead_ppl_list, max_death)
             initialization=True        
-        delta_t=np.random.uniform(0,5)
+        delta_t=math.ceil(np.random.uniform(0,30)) #the random number is generated between 0 and 30 in order to save time while running the code
         s+=delta_t
         ra=np.random.uniform()
 #         intensity_prob = rho*(sigma(s) + decay*sum( h_uniform(s - t) for t in event_times))
@@ -238,7 +237,6 @@ def hawkes_simulation_generalized(decay,T):
             dead_ppl_list.append(dead_ppl)
             infected_ppl_list.append(infected_ppl-dead_ppl) # adding the number of infected people 
             event_times.append(s)
-            print(event_times)
             if initialization==False:
                 cost_values.append(0) # means there has been no cost 
             else:
@@ -266,14 +264,14 @@ plt.plot(event_times, dead_ppl_list, label='Dead')
 plt.xlabel('Time (in days)')
 plt.ylabel('Number of individuals')
 plt.legend()
-plt.savefig('infected-dead-second_part')
+# plt.savefig('infected-dead-second_part')
 plt.show()
 
 
 plt.figure()
 plt.plot(event_times, cost_values, label='Cost')
 plt.xlabel('Time (in days)')
-plt.savefig('cost-second_part')
+# plt.savefig('cost-second_part')
 plt.legend()
 
 plt.show()
@@ -282,7 +280,7 @@ plt.show()
 # the zeros are use to create dots on the plot 
 plt.scatter(event_times, np.zeros(len(event_times)))
 plt.xlabel('Time (in days)')
-plt.savefig('events-second_part')
+# plt.savefig('events-second_part')
 plt.show()
 
 
