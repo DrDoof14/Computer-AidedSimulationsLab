@@ -4,7 +4,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize_scalar , minimize
-np.random.seed(67)
+np.random.seed(1886)
 In= input("Press enter to see the first part of the simutaion which is for the Exponential-based h(t)")
 #defining some of the required functions 
 # based on the slides, s=s + thau (delta_t) and thau is from the same distro as h(t), h(t) can be uniform or exp
@@ -13,7 +13,6 @@ In= input("Press enter to see the first part of the simutaion which is for the E
         
 def sigma(t):
     return 20 * (t >= 0) * (t <= 10)
-
 #uniform h(t)
 def h_uniform(t):
     return np.random.uniform(0, 20) 
@@ -39,9 +38,9 @@ def hawkes_simulation(decay, T):
         s+=delta_t
         ra=np.random.uniform()
         intensity_prob = sigma(s) + decay * sum( h_expo(s - t) for t in event_times)
-
+        # if the condition below goes through, a new event will be created
         if ra < intensity_prob/intensity_at_s: # or D * intensity_at_s < intensity_prob
-            infected_ppl+=1
+            infected_ppl+=1 # number of infected people will be increased
             dead_ppl = math.ceil(0.02 * infected_ppl)
             infected_ppl_list.append(infected_ppl-dead_ppl)
             dead_ppl_list.append(dead_ppl)
@@ -58,14 +57,14 @@ def hawkes_simulation(decay, T):
 
         
         
-T= 100 # the upper bound for the  time of our simulation 
+# T= 100 # the upper bound for the  time of our simulation 
 
-decay=2 #reproduction rate
+# decay=2 #reproduction rate
         
 
         
         
-event_times,dead_ppl,dead_ppl_list,infected_ppl_list=hawkes_simulation(decay,T)
+event_times,dead_ppl,dead_ppl_list,infected_ppl_list=hawkes_simulation(decay = 2,T = 100)
 plt.figure()
 plt.plot(event_times, infected_ppl_list, label='Infected')
 plt.plot(event_times, dead_ppl_list, label='Death')
@@ -92,7 +91,7 @@ def intensity_function_viz(event_times, T):
         ld.append(sigma(i) + 2 * np.sum(lambda_exp * np.exp(-lambda_exp * (i - sample[sample < i]))))
     return ld, ranges_list 
 
-ld,ranges_list=intensity_function_viz(event_times, T)
+ld,ranges_list=intensity_function_viz(event_times, T=100)
 
 
 
@@ -145,11 +144,11 @@ def hawkes_simulation(decay, T):
 
         
         
-T= 100 # the upper bound for the  time of our simulation 
+# T= 100 # the upper bound for the  time of our simulation 
 
-decay=2 #reproduction rate
+# decay=2 #reproduction rate
              
-event_times,dead_ppl,dead_ppl_list,infected_ppl_list=hawkes_simulation(decay,T)
+event_times,dead_ppl,dead_ppl_list,infected_ppl_list=hawkes_simulation(decay =2 ,T=100)
 
 plt.figure()
 plt.plot(event_times, infected_ppl_list, label='Infected')
@@ -168,7 +167,7 @@ plt.xlabel('Time (in days)')
 plt.show()
 
 
-ld,ranges_list=intensity_function_viz(event_times, T)
+ld,ranges_list=intensity_function_viz(event_times, T=100)
 
 
 plt.figure(figsize=(10,2))
@@ -231,18 +230,19 @@ def hawkes_simulation_generalized(decay,T):
 #         intensity_prob = rho*(sigma(s) + decay*sum( h_uniform(s - t) for t in event_times))
         intensity_prob = rho*(sigma(s) + decay * sum( h_expo(s - t) for t in event_times))
         temp_prob=[]
-        if ra <= (intensity_prob/intensity_at_s):
+        if ra <= (intensity_prob/intensity_at_s): 
             temp_prob=[np.random.poisson(decay) for i in range(last_infected)]
-        last_infected=sum(temp_prob) # we update the numer of last layer of the infeced tree of ppl
-        infected_ppl+=last_infected
-        dead_ppl=math.ceil(0.02 * infected_ppl) # we update the number of dead people 
-        dead_ppl_list.append(dead_ppl)
-        infected_ppl_list.append(infected_ppl-dead_ppl) # adding the number of infected people 
-        event_times.append(s)
-        if initialization==False:
-            cost_values.append(0) # means there has been no cost 
-        else:
-            cost_values.append(cost_values[-1] + cost(rho))
+            last_infected=sum(temp_prob) # we update the numer of last layer of the infeced tree of ppl
+            infected_ppl+=last_infected
+            dead_ppl=math.ceil(0.02 * infected_ppl) # we update the number of dead people 
+            dead_ppl_list.append(dead_ppl)
+            infected_ppl_list.append(infected_ppl-dead_ppl) # adding the number of infected people 
+            event_times.append(s)
+            print(event_times)
+            if initialization==False:
+                cost_values.append(0) # means there has been no cost 
+            else:
+                cost_values.append(cost_values[-1] + cost(rho))
     if s<T:
         return event_times, dead_ppl, dead_ppl_list, infected_ppl_list, cost_values
             
@@ -266,19 +266,23 @@ plt.plot(event_times, dead_ppl_list, label='Dead')
 plt.xlabel('Time (in days)')
 plt.ylabel('Number of individuals')
 plt.legend()
+plt.savefig('infected-dead-second_part')
 plt.show()
 
 
 plt.figure()
 plt.plot(event_times, cost_values, label='Cost')
 plt.xlabel('Time (in days)')
+plt.savefig('cost-second_part')
 plt.legend()
+
 plt.show()
 
 # Plot the event times
 # the zeros are use to create dots on the plot 
 plt.scatter(event_times, np.zeros(len(event_times)))
 plt.xlabel('Time (in days)')
+plt.savefig('events-second_part')
 plt.show()
 
 
