@@ -32,11 +32,10 @@ def hawkes_simulation(decay, T):
     infected_ppl=1 #number of infected people, it should be equal to 1 in the beggining of the simulation
     last_infected=1
     infected_ppl_list=[]
-    while s<T:
+    while s<T: # as long as our current time is less than the upper bound (100 days )
         intensity_at_s = sigma(s) + decay * sum( h_expo(s - t) for t in event_times)
 
         delta_t=np.random.uniform(0,5) # this should be from the same distro as h(t)
-#         delta_t=mu * np.exp(-beta*(s))
         s+=delta_t
         ra=np.random.uniform()
         intensity_prob = sigma(s) + decay * sum( h_expo(s - t) for t in event_times)
@@ -83,19 +82,27 @@ plt.scatter(event_times, [0] * len(event_times))
 plt.xlabel('Time (in days)')
 plt.show()
 
-smp = np.asarray(event_times)
+# to visualase the intensity
+def intensity_function_viz(event_times, T): 
+    lambda_exp=1/10 # as mentioned in the question
+    sample = np.asarray(event_times)
+    ranges_list = np.arange(0, T, .001)  # creating  a list with the lenght of the upper bound of the time 
+    ld=[]
+    for i in ranges_list: #trying to calculate the intensity of the evenets so it makes it possible to visualize 
+        ld.append(sigma(i) + 2 * np.sum(lambda_exp * np.exp(-lambda_exp * (i - sample[sample < i]))))
+    return ld, ranges_list 
 
-range_list = np.arange(0, T, .001)
+ld,ranges_list=intensity_function_viz(event_times, T)
 
-lda_ar = [ sigma(x) + 2 * np.sum(0.1 * np.exp(-0.1 * (x - smp[smp < x]))) for x in range_list]
+
 
 plt.figure(figsize=(10,2))
 plt.ylabel("lambda * t")
 
-plt.xlabel("Time (iu days)")
+plt.xlabel("Time (in days)")
 
 plt.yticks(np.arange(0, 5, 0.1))
-_ = plt.plot(range_list[11000:], lda_ar[11000:], 'b-')
+_ = plt.plot(ranges_list[12000:], ld[12000:], 'b-') # 12000 has been chosen to see the useful part of the data
 plt.scatter(event_times, [0] * len(event_times))
 plt.show()
 
@@ -141,11 +148,9 @@ def hawkes_simulation(decay, T):
 T= 100 # the upper bound for the  time of our simulation 
 
 decay=2 #reproduction rate
-        
-
-        
-        
+             
 event_times,dead_ppl,dead_ppl_list,infected_ppl_list=hawkes_simulation(decay,T)
+
 plt.figure()
 plt.plot(event_times, infected_ppl_list, label='Infected')
 plt.plot(event_times, dead_ppl_list, label='Death')
@@ -158,48 +163,41 @@ plt.show()
 
 
 # Plot the event times
-plt.scatter(event_times, [0] * len(event_times))
+plt.scatter(event_times, np.zeros(len(event_times)))
 plt.xlabel('Time (in days)')
 plt.show()
 
-sample = np.asarray(event_times)
 
-range_lst = np.arange(0, T, .001) # creating  a list with the lenght of the upper bound of the time 
+ld,ranges_list=intensity_function_viz(event_times, T)
 
-
-
-#trying to calculate the intensity of the evenets so it makes it possible to visualize 
-lambda_exp=1/10 # as mentioned in the question
-ld = [ sigma(x) + 2 * np.sum(lambda_exp * np.exp(-1*lambda_exp * (x - sample[sample < x]))) for x in range_lst] 
 
 plt.figure(figsize=(10,2))
 plt.ylabel("Lambda * t")
 plt.yticks(np.arange(0, 5, 0.1))
-_ = plt.plot(range_lst[11000:], ld[11000:], 'b-')
-plt.scatter(event_times, [0] * len(event_times))
+_ = plt.plot(ranges_list[12000:], ld[12000:], 'b-')
+plt.scatter(event_times,  np.zeros(len(event_times)))
 plt.xlabel('Time (in days)')
 plt.show()
-
 
 
 #=========================================Second part===============================================
 in3=input('Please press enter to see the second part of the simulation')
 
+# these three commented functions are the same as the first part 
+# def sigma(t):
+#     return 20 * (t >= 0) * (t <=10)
 
-def sigma(t):
-    return 20 * (t >= 0) * (t <=10)
-
-#uniform h(t)
-def h_uniform(t):
-    return np.random.uniform(0, 20) 
-#exponential h(t)
-def h_expo(t): 
-    lambda_exp = 1/10
-    return lambda_exp * math.exp(-lambda_exp * (lambda_exp * t))
+# #uniform h(t)
+# def h_uniform(t):
+#     return np.random.uniform(0, 20) 
+# #exponential h(t)
+# def h_expo(t): 
+#     lambda_exp = 1/10
+#     return lambda_exp * math.exp(-lambda_exp * (lambda_exp * t))
 
 
 def optimize_rho(cost, T, s, dead_ppl_list, max_death):
-    #using the minimize_scalar from scipy to find the minimum value of the scalar function we have here 
+    # using the minimize_scalar from scipy to find the value of rho that minimizes the cost function
     rho = 1e5 * minimize_scalar(lambda rho: cost(rho) + (T-s)/T * (dead_ppl_list[-1]/s - max_death/T)**2, bounds=(0, 1), method='bounded').x
     return rho
 
@@ -253,9 +251,9 @@ def hawkes_simulation_generalized(decay,T):
 
     
     
-decay= 2
-T=365    
-event_times,dead_ppl,dead_ppl_list,infected_ppl_list,cost_values=hawkes_simulation_generalized(decay,T)
+# decay= 2
+# T=365    
+event_times,dead_ppl,dead_ppl_list,infected_ppl_list,cost_values=hawkes_simulation_generalized(decay = 2,T= 365)
 
 
 
@@ -278,8 +276,9 @@ plt.legend()
 plt.show()
 
 # Plot the event times
-plt.scatter(event_times, [0] * len(event_times))
-plt.xlabel('Time (in days')
+# the zeros are use to create dots on the plot 
+plt.scatter(event_times, np.zeros(len(event_times)))
+plt.xlabel('Time (in days)')
 plt.show()
 
 
