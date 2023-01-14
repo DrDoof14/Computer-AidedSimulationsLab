@@ -180,8 +180,10 @@ plt.scatter(event_times, [0] * len(event_times))
 plt.xlabel('Time (in days)')
 plt.show()
 
+
+
+#=========================================Second part===============================================
 in3=input('Please press enter to see the second part of the simulation')
-#Second part
 
 
 def sigma(t):
