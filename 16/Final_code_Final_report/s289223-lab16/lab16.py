@@ -3,7 +3,7 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize_scalar , minimize
+from scipy.optimize import minimize_scalar 
 np.random.seed(1886)
 
 #=================First part===================================
@@ -21,12 +21,12 @@ def h_uniform(t):
 #exponential h(t)
 def h_expo(t): 
     lambda_exp = 1/10
-    return lambda_exp * math.exp(-0.1 * (lambda_exp * t))
+    return lambda_exp * math.exp(-lambda_exp * (lambda_exp * t))
 
 
 # T = upper bound for time 
 # decay = reproduction rate 
-def hawkes_simulation(decay, T):
+def hawkes_simulation(decay, T,h):
     s=0 # current time 
     dead_ppl=0#counts the number of dead people 
     dead_ppl_list=[] # to create the plot
@@ -35,11 +35,18 @@ def hawkes_simulation(decay, T):
     last_infected=1 # the last number of infected people 
     infected_ppl_list=[]
     while s<T: # as long as our current time is less than the upper bound (100 days )
-        intensity_at_s = sigma(s) + decay * sum( h_expo(s - t) for t in event_times) # we compute the intensity based on h(t) and sigma(t)
+        if h == 1:
+            intensity_at_s = sigma(s) + decay * sum( h_expo(s - t) for t in event_times) # we compute the intensity based on h(t) and sigma(t)
+        elif h ==2:
+                intensity_at_s = sigma(s) + decay*sum( h_uniform(s - t) for t in event_times) # computing the intensity 
         delta_t=np.random.uniform(0,5) # this is the time that will be added to the current time (it's notated as thau in the slides)
         s+=delta_t
         ra=np.random.uniform() # in order to add more randomness to the simulation
-        intensity_prob = sigma(s) + decay * sum( h_expo(s - t) for t in event_times)
+        if h ==1:
+            intensity_prob = sigma(s) + decay * sum( h_expo(s - t) for t in event_times) # exponential
+        elif h==2:
+            intensity_prob = sigma(s) + decay*sum( h_uniform(s - t) for t in event_times) #uniform
+
         # if the condition below goes through, a new event will be created
         if ra < intensity_prob/intensity_at_s: # or D * intensity_at_s < intensity_prob
             infected_ppl+=1 # number of infected people will be increased
@@ -56,34 +63,36 @@ def hawkes_simulation(decay, T):
         return event_times[:-1] , dead_ppl, dead_ppl_list[:-1],infected_ppl_list[:-1]
 
 
+
+
+
+
+
+# function for plotting the first part 
+def plot_events(event_times, infected_ppl_list, dead_ppl_list, ranges_list, ld):
+    plt.figure()
+    plt.plot(event_times, infected_ppl_list, label='Infected')
+    plt.plot(event_times, dead_ppl_list, label='Death')
+    plt.xlabel('Time (days)')
+    plt.ylabel('Number of individuals')
+    plt.legend()
+    plt.show()
+    # Plot the event times
+    plt.scatter(event_times, np.zeros(len(event_times)))
+    plt.xlabel('Time (in days)')
+    plt.show()
+    plt.figure(figsize=(10,2))
+    plt.ylabel("Lambda * t")
+    plt.yticks(np.arange(0, 5, 0.1))
+    _ = plt.plot(ranges_list[12000:], ld[12000:], 'b-')
+    plt.scatter(event_times,  np.zeros(len(event_times)))
+    plt.xlabel('Time (in days)')
+    plt.show()
         
         
-# T= 100 # the upper bound for the  time of our simulation 
-
-# decay=2 #reproduction rate
-        
-
-        
-# we strat the simulation here 
-event_times,dead_ppl,dead_ppl_list,infected_ppl_list=hawkes_simulation(decay = 2,T = 100)
-
-plt.figure()
-plt.plot(event_times, infected_ppl_list, label='Infected')
-plt.plot(event_times, dead_ppl_list, label='Death')
-plt.xlabel('Time (days)')
-plt.ylabel('Number of individuals')
-plt.legend()
-plt.show()
 
 
-
-
-# Plot the event times
-plt.scatter(event_times, np.zeros(len(event_times)))
-plt.xlabel('Time (in days)')
-plt.show()
-
-# to visualase the intensity (for the sake of a better understanding of the simulation)
+# function to visualase the intensity (for the sake of a better understanding of the simulation)
 def intensity_function_viz(event_times, T): 
     lambda_exp=1/10 # as mentioned in the question
     sample = np.asarray(event_times)
@@ -93,99 +102,32 @@ def intensity_function_viz(event_times, T):
         ld.append(sigma(i) + 2 * np.sum(lambda_exp * np.exp(-lambda_exp * (i - sample[sample < i]))))
     return ld, ranges_list 
 
-ld,ranges_list=intensity_function_viz(event_times, T=100)
 
 
-
-plt.figure(figsize=(10,2))
-plt.ylabel("lambda * t")
-
-plt.xlabel("Time (in days)")
-
-plt.yticks(np.arange(0, 5, 0.1))
-_ = plt.plot(ranges_list[12000:], ld[12000:], 'b-') # 12000 has been chosen to see the useful part of the data
-plt.scatter(event_times, np.zeros(len(event_times)))
-plt.show()
-
-
-in2=In= input("Press enter to see the first part of the simutaion for the Uniform-based h(t)")
-
-
-#=========================first part , different h(t)===================================================
-
-
-#=========================== Everything is the same as above here but instead of an exponential h(t), a uniform h(t) is used =============================
-
-def hawkes_simulation(decay, T):
-    s=0 # the current time 
-    dead_ppl=0#counts the number of dead people 
-    dead_ppl_list=[] # to create the plot
-    event_times=[]  # set of event times
-    infected_ppl=1 #number of infected people, it should be equal to 1 in the beggining of the simulation
-    last_infected=1 # the last number of people who got infected
-    infected_ppl_list=[]
-    while s<T:
-        intensity_at_s = sigma(s) + decay*sum( h_uniform(s - t) for t in event_times) # computing the intensity 
-
-        delta_t=np.random.uniform(0,5)  # explained above 
-        s+=delta_t 
-        ra=np.random.uniform()
-        intensity_prob = sigma(s) + decay*sum( h_uniform(s - t) for t in event_times)
-
-        if ra < intensity_prob/intensity_at_s: # or ra * intensity_at_s < intensity_prob
-
-            infected_ppl+=1
-            dead_ppl = math.ceil(0.02 * infected_ppl)
-            infected_ppl_list.append(infected_ppl-dead_ppl)
-            dead_ppl_list.append(dead_ppl)
-            event_times.append(s)
-    if s<T:
-        
-        dead_ppl=math.ceil(0.02 * infected_ppl)  # to only get the number of dead people
-        return event_times, dead_ppl, dead_ppl_list,infected_ppl_list
-    elif s>=T:
-        dead_ppl=math.ceil(0.02 * (infected_ppl-last_infected)) # to only get the number of dead people
-        return event_times[:-1] , dead_ppl, dead_ppl_list[:-1],infected_ppl_list[:-1]
-
-
-        
 
 # T= 100 # the upper bound for the  time of our simulation 
+# decay=2 #reproduction rate        
+# we strat the simulation here 
+event_times,dead_ppl,dead_ppl_list,infected_ppl_list=hawkes_simulation(decay = 2,T = 100,h=1)
 
-# decay=2 #reproduction rate
-#starting the simulation
-
-event_times,dead_ppl,dead_ppl_list,infected_ppl_list=hawkes_simulation(decay =2 ,T=100)
-#============================================plotting the outputs=====================================================
-
-plt.figure()
-plt.plot(event_times, infected_ppl_list, label='Infected')
-plt.plot(event_times, dead_ppl_list, label='Death')
-plt.xlabel('Time (days)')
-plt.ylabel('Number of individuals')
-plt.legend()
-plt.show()
-
-
-
-
-# Plot the event times
-plt.scatter(event_times, np.zeros(len(event_times)))
-plt.xlabel('Time (in days)')
-plt.show()
-
-
+#plots 
 ld,ranges_list=intensity_function_viz(event_times, T=100)
+plot_events(event_times, infected_ppl_list, dead_ppl_list, ranges_list, ld)
 
 
-plt.figure(figsize=(10,2))
-plt.ylabel("Lambda * t")
-plt.yticks(np.arange(0, 5, 0.1))
-_ = plt.plot(ranges_list[12000:], ld[12000:], 'b-')
-plt.scatter(event_times,  np.zeros(len(event_times)))
-plt.xlabel('Time (in days)')
-plt.show()
+#=========================first part , uniform h(t)===================================================
+in2=In= input("Press enter to see the first part of the simutaion for the Uniform-based h(t)")
 
+#=========================== Everything is the same as above here but instead of an exponential h(t), a uniform h(t) is used =============================
+# T= 100 # the upper bound for the  time of our simulation 
+ # h = 2 to creat the uniform based h(t)
+# decay=2 #reproduction rate
+
+#starting the simulation
+event_times,dead_ppl,dead_ppl_list,infected_ppl_list=hawkes_simulation(decay =2 ,T=100,h=2)
+#============================================plotting the outputs=====================================================
+ld,ranges_list=intensity_function_viz(event_times, T=100)
+plot_events(event_times, infected_ppl_list, dead_ppl_list, ranges_list, ld)
 
 #=========================================Second part===============================================
 in3=input('Please press enter to see the second part of the simulation')
@@ -202,17 +144,17 @@ in3=input('Please press enter to see the second part of the simulation')
 #     lambda_exp = 1/10
 #     return lambda_exp * math.exp(-lambda_exp * (lambda_exp * t))
 
+
+
 # the function use to optimize the rho 
 # rho will be used to minimize the cost 
 def optimize_rho(cost, T, s, dead_ppl_list, max_death):
     # using the minimize_scalar from scipy to find the value of rho that minimizes the cost function
     rho = 1e5 * minimize_scalar(lambda rho: cost(rho) + (T-s)/T * (dead_ppl_list[-1]/s - max_death/T)**2, bounds=(0, 1), method='bounded').x
     return rho
-
 # the cost fucntion as mentioned in the question 
 def cost(c):
     return c ** 2
-
 
 def hawkes_simulation_generalized(decay,T):
     dead_ppl_list=[] # to create the plot
@@ -258,11 +200,10 @@ def hawkes_simulation_generalized(decay,T):
             
     else: # if the value for s is larger than T, we remove the last value for the lists and then return the values for our variabels and lists 
         return event_times[:-1] , dead_ppl, dead_ppl_list[:-1],infected_ppl_list[:-1], cost_values[:-1]
-
-    
-    
+   
 # decay= 2
-# T=365    
+# T=365    days 
+
 # we start the simulation here
 event_times,dead_ppl,dead_ppl_list,infected_ppl_list,cost_values=hawkes_simulation_generalized(decay = 2,T= 365)
 
@@ -270,7 +211,7 @@ event_times,dead_ppl,dead_ppl_list,infected_ppl_list,cost_values=hawkes_simulati
 
 
 
-#============================================plotting the outputs=====================================================
+#============================================plotting the outputs for the second part=====================================================
 
 plt.figure()
 plt.plot(event_times, infected_ppl_list, label='Infected')
@@ -278,26 +219,16 @@ plt.plot(event_times, dead_ppl_list, label='Dead')
 plt.xlabel('Time (in days)')
 plt.ylabel('Number of individuals')
 plt.legend()
-# plt.savefig('infected-dead-second_part')
 plt.show()
-
-
+#-----------------
 plt.figure()
 plt.plot(event_times, cost_values, label='Cost')
 plt.xlabel('Time (in days)')
-# plt.savefig('cost-second_part')
 plt.legend()
-
 plt.show()
-
+#----------------------
 # Plot the event times
 # the zeros are use to create dots on the plot 
 plt.scatter(event_times, np.zeros(len(event_times)))
 plt.xlabel('Time (in days)')
-# plt.savefig('events-second_part')
 plt.show()
-
-
-
-
-
