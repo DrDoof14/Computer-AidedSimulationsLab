@@ -34,10 +34,10 @@ def hawkes_simulation(decay, T,h):
     infected_ppl=1 #number of infected people, it should be equal to 1 in the beggining of the simulation
     last_infected=1 # the last number of infected people 
     infected_ppl_list=[]
-    while s<T: # as long as our current time is less than the upper bound (100 days )
-        if h == 1:
+    while s<T: # as long as our current time is less than the upper bound (100 days)
+        if h == 1: #exponential
             intensity_at_s = sigma(s) + decay * sum( h_expo(s - t) for t in event_times) # we compute the intensity based on h(t) and sigma(t)
-        elif h ==2:
+        elif h ==2: # uniform
                 intensity_at_s = sigma(s) + decay*sum( h_uniform(s - t) for t in event_times) # computing the intensity 
         delta_t=np.random.uniform(0,5) # this is the time that will be added to the current time (it's notated as thau in the slides)
         s+=delta_t
@@ -84,7 +84,7 @@ def plot_events(event_times, infected_ppl_list, dead_ppl_list, ranges_list, ld):
     plt.figure(figsize=(10,2))
     plt.ylabel("Lambda * t")
     plt.yticks(np.arange(0, 5, 0.1))
-    _ = plt.plot(ranges_list[12000:], ld[12000:], 'b-')
+    _ = plt.plot(ranges_list[12000:], ld[12000:], 'b-') # 12000 has been used for the sake of a better visualisation 
     plt.scatter(event_times,  np.zeros(len(event_times)))
     plt.xlabel('Time (in days)')
     plt.show()
@@ -98,7 +98,7 @@ def intensity_function_viz(event_times, T):
     sample = np.asarray(event_times)
     ranges_list = np.arange(0, T, .001)  # creating  a list with the lenght of the upper bound of the time 
     ld=[]
-    for i in ranges_list: #trying to calculate the intensity of the evenets so it makes it possible to visualize 
+    for i in ranges_list: #trying to calculate the intensity of the evenets so to make it possible to visualize 
         ld.append(sigma(i) + 2 * np.sum(lambda_exp * np.exp(-lambda_exp * (i - sample[sample < i]))))
     return ld, ranges_list 
 
@@ -107,7 +107,7 @@ def intensity_function_viz(event_times, T):
 
 # T= 100 # the upper bound for the  time of our simulation 
 # decay=2 #reproduction rate        
-# we strat the simulation here 
+# we start the simulation here 
 event_times,dead_ppl,dead_ppl_list,infected_ppl_list=hawkes_simulation(decay = 2,T = 100,h=1)
 
 #plots 
