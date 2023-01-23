@@ -163,7 +163,7 @@ bexp= 34 # found in question 1
 new_epsilon = m/(2** bexp)
 print(f' The theoratical value for epsilon with Bexp is equal to {new_epsilon}\n')
 
-#the same value will be achieved if the formula is page 13 of the slide is used
+#the same value will be achieved if the formula in page 13 of the slide is used
 #you can the code for that formula commented below
 #########
 # pr= 1- ((1-(1/(2**bexp))) ** m)
